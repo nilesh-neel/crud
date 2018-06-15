@@ -75,7 +75,7 @@ gulp.task('build-html', () => {
         .pipe(htmlextend({
             annotations: false,
             verbose: false,
-            root: './dist'
+            root: '/dist'
         }).on('error', (e) => console.log(e)))
         .pipe(fileinclude({
             prefix: '@@',
@@ -87,7 +87,7 @@ gulp.task('build-html', () => {
             stream: true
         }));
 
-    var indexFile = gulp.src("./**/*.html")
+    var indexFile = gulp.src("./*.html")
         .pipe(htmlmin({ collapseWhitespace: true }).on('error', (e) => console.log(e)))
         .pipe(gulp.dest('./dist'));
 
@@ -99,11 +99,16 @@ gulp.task('build-html', () => {
 //gulp.task('build', ['build-sass', 'build-js', 'build-html']);
 gulp.task('build', ['build-css', 'build-js', 'build-html']);
 
+gulp.task('watch', ['browser-sync'], function () {
+    gulp.watch(['./*.html','src/html/**/*.html'], ['build-html']);
+    gulp.watch('src/css/**/*.css', ['build-css']);
+    gulp.watch('src/js/**/*.js', ['build-js']);
+});
 
 
 
 gulp.task('browser-sync', function () {
-    browserSync.init(null, {
+    browserSync.init(['./**/*.html', './dist/css/**/*.css', './dist/js/**/*.js'], {
         open: true,
         index: 'index.html',
         server: {
@@ -121,8 +126,4 @@ gulp.task('browser-sync', function () {
     });
 });
 
-gulp.task('start', ['build', 'browser-sync'], () => {
-    gulp.watch('src/html/**/*.html', ['build-html']);
-    gulp.watch('src/css/**/*.css', ['build-css']);
-    gulp.watch('src/js/**/*.js', ['build-js']);
-});
+gulp.task('start', ['watch', 'browser-sync', 'build']);
