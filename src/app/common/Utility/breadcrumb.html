@@ -1,0 +1,15 @@
+<ol class="breadcrumb">
+    <!-- <li class="breadcrumb-item">
+        <a href="javascript:void(0)">Home</a>
+    </li>
+    <li class="breadcrumb-item active">Dashboard</li> -->
+
+    <li data-ng-repeat="state in $state.$current.path | filter:show" data-ng-class="{ 'current': $last }" class="breadcrumb-item">
+        <a data-ng-if="!$last" class="breadcrumb-item" href="{{ state.url.format($stateParams) }}">{{ state.data.title }}</a>
+        <span data-ng-if="$last" class="breadcrumb-item active">{{ state.data.title }}</span>
+    </li>
+
+
+
+
+</ol>
